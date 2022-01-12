@@ -11,13 +11,13 @@ http://localhost:808x/scooter
 ```
 where x = [0:4]
 
-####Eg.
+### Eg.
 You should see this text on http://localhost:8083/scooter
 ```
 Hello scooter, your id = 113
 ```
 
-###Important
+### Important
 By now you should find & stop generated containers manually by:
 ```
 docker ps
