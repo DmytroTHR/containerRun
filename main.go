@@ -35,6 +35,7 @@ func runAnotherServiceInDocker(i string) {
 	command := exec.Command("docker",
 		"run",
 		"--detach",
+		"--rm",
 		"--network", projectName+"_"+projectNetwork,
 		"--env", "SCOOTER_ID=11"+i,
 		"-p", "808"+i+":8080",
