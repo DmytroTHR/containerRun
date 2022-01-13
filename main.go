@@ -16,7 +16,6 @@ var wg = sync.WaitGroup{}
 func main() {
 	fmt.Println("Application A run..")
 
-	stopPatternService()
 	for i := 0; i < 5; i++ {
 		wg.Add(1)
 		go runAnotherServiceInDocker(strconv.Itoa(i))
@@ -24,10 +23,6 @@ func main() {
 
 	wg.Wait()
 	fmt.Println("Application A end.")
-}
-
-func stopPatternService() {
-	_ = exec.Command("docker", "stop", serviceToRun).Run()
 }
 
 func runAnotherServiceInDocker(i string) {
@@ -40,9 +35,16 @@ func runAnotherServiceInDocker(i string) {
 		"--env", "SCOOTER_ID=11"+i,
 		"-p", "808"+i+":8080",
 		projectName+"_"+serviceToRun)
-	log.Println(command.String())
-	err := command.Run()
+	containerID, err := command.Output()
 	if err != nil {
-		log.Panic(err)
+		log.Panicf("failed to create new container for ID <%s>: %v", i, err)
+	}
+	renameCommand := exec.Command("docker",
+		"rename",
+		string(containerID),
+		serviceToRun+"_"+i)
+	err = renameCommand.Run()
+	if err != nil {
+		log.Panicf("failed to rename container <%s>: %v", containerID, err)
 	}
 }

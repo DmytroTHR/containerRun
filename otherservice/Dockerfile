@@ -5,4 +5,4 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o build/projectB
 
 FROM scratch
 COPY --from=builder /go/src/someProject/build/projectB /usr/bin/projectB
-ENTRYPOINT [ "projectB" ]
+ENTRYPOINT ["projectB"]
